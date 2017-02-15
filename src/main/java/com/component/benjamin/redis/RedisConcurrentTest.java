@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.component.benjamin.utils.Arguments;
-import com.component.benjamin.utils.FileFinder;
+import com.component.utils.FileFinder;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -40,27 +41,26 @@ public class RedisConcurrentTest {
 			DOMConfigurator.configure(url);// 加载.xml文件
 		} else {
 
-			String[] files = FileFinder.find(new File("./"), "log4j.xml");
-			if (files == null || files.length == 0) {
-				files = FileFinder.find(new File("../"), "log4j.xml");
+			Set<File> files = FileFinder.find(new File("./"), "log4j\\.xml");
+			if (files == null || files.size() == 0) {
+				files = FileFinder.find(new File("../"), "log4j\\.xml");
 			}
 
-			if (files == null || files.length == 0) {
+			if (files == null || files.size() == 0) {
 				throw new NullPointerException("can not found logj4.xml");
 			}
-			String file = null;
-			for (String str : files) {
-				if (new File(str).exists()) {
-					file = str;
-					break;
-				}
+
+			File file = null;
+			for (File tmpFile : files) {
+				file = tmpFile;
+				break;
 			}
 
 			if (file == null) {
 				throw new NullPointerException("can not found logj4.xml");
 			}
 
-			DOMConfigurator.configure(file);
+			DOMConfigurator.configure(file.getAbsolutePath());
 		}
 	}
 
