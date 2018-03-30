@@ -1,0 +1,142 @@
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.8-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.8-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.8-SNAPSHOT/maven-metadata.xml (2 KB at 11.7 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.8-SNAPSHOT/maven-metadata.xml (2 KB at 10.2 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-component/1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-component/1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-component/1-SNAPSHOT/maven-metadata.xml (589 B at 30.3 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-component/1-SNAPSHOT/maven-metadata.xml (589 B at 19.2 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom/1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom/1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom/1-SNAPSHOT/maven-metadata.xml (579 B at 31.4 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom/1-SNAPSHOT/maven-metadata.xml (579 B at 20.2 KB/sec)
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-memdb:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/sitp/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/sitp/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/sitp/1.0.0-SNAPSHOT/maven-metadata.xml (3 KB at 92.2 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/sitp/1.0.0-SNAPSHOT/maven-metadata.xml (3 KB at 57.9 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/protocol/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/protocol/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/protocol/1.1.0-SNAPSHOT/maven-metadata.xml (605 B at 32.8 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/protocol/protocol/1.1.0-SNAPSHOT/maven-metadata.xml (605 B at 21.1 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.1-SNAPSHOT/maven-metadata.xml (601 B at 25.5 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.1-SNAPSHOT/maven-metadata.xml (601 B at 17.3 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/ra-common/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/ra-common/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/ra-common/1.2.2-SNAPSHOT/maven-metadata.xml (2 KB at 53.4 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/ra-common/1.2.2-SNAPSHOT/maven-metadata.xml (2 KB at 40.5 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.2-SNAPSHOT/maven-metadata.xml (601 B at 30.9 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.2-SNAPSHOT/maven-metadata.xml (601 B at 20.2 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-telware/2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-telware/2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-telware/2-SNAPSHOT/maven-metadata.xml (587 B at 31.8 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/pom/pom-telware/2-SNAPSHOT/maven-metadata.xml (587 B at 20.5 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.2-SNAPSHOT/maven-metadata.xml (2 KB at 58.7 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.2-SNAPSHOT/maven-metadata.xml (2 KB at 41.9 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/sat/component-satml/1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/sat/component-satml/1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/sat/component-satml/1.0-SNAPSHOT/maven-metadata.xml (2 KB at 61.9 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/sat/component-satml/1.0-SNAPSHOT/maven-metadata.xml (2 KB at 36.8 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-i18n/1.1.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-i18n/1.1.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-i18n/1.1.4-SNAPSHOT/maven-metadata.xml (2 KB at 53.7 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-i18n/1.1.4-SNAPSHOT/maven-metadata.xml (2 KB at 34.8 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-dict/1.0.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-dict/1.0.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-dict/1.0.4-SNAPSHOT/maven-metadata.xml (2 KB at 58.8 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-dict/1.0.4-SNAPSHOT/maven-metadata.xml (2 KB at 42.0 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-bill/1.0.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-bill/1.0.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-bill/1.0.1-SNAPSHOT/maven-metadata.xml (2 KB at 59.1 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-bill/1.0.1-SNAPSHOT/maven-metadata.xml (2 KB at 28.8 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.2.7-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.2.7-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.2.7-SNAPSHOT/maven-metadata.xml (2 KB at 39.4 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.2.7-SNAPSHOT/maven-metadata.xml (2 KB at 28.1 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-utils/1.0.6-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-utils/1.0.6-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-utils/1.0.6-SNAPSHOT/maven-metadata.xml (2 KB at 62.2 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-utils/1.0.6-SNAPSHOT/maven-metadata.xml (2 KB at 39.4 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-appframework/1.0.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-appframework/1.0.4-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-appframework/1.0.4-SNAPSHOT/maven-metadata.xml (2 KB at 62.6 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-appframework/1.0.4-SNAPSHOT/maven-metadata.xml (2 KB at 37.2 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.5-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.5-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.5-SNAPSHOT/maven-metadata.xml (2 KB at 65.6 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.5-SNAPSHOT/maven-metadata.xml (2 KB at 39.4 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-conf/1.0.3-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-conf/1.0.3-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-conf/1.0.3-SNAPSHOT/maven-metadata.xml (2 KB at 61.9 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-conf/1.0.3-SNAPSHOT/maven-metadata.xml (2 KB at 31.0 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.2.0-SNAPSHOT/maven-metadata.xml (2 KB at 51.1 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.2.0-SNAPSHOT/maven-metadata.xml (2 KB at 37.9 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.1.9-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.1.9-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.1.9-SNAPSHOT/maven-metadata.xml (2 KB at 39.3 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.1.9-SNAPSHOT/maven-metadata.xml (2 KB at 38.0 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-test/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-test/1.0.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-test/1.0.0-SNAPSHOT/maven-metadata.xml (273 B at 14.8 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-test/1.0.0-SNAPSHOT/maven-metadata.xml (273 B at 9.9 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-oprlog/1.0.6-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-oprlog/1.0.6-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-oprlog/1.0.6-SNAPSHOT/maven-metadata.xml (2 KB at 62.3 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-oprlog/1.0.6-SNAPSHOT/maven-metadata.xml (2 KB at 40.8 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-stat/1.1.9-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-stat/1.1.9-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-stat/1.1.9-SNAPSHOT/maven-metadata.xml (2 KB at 59.1 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-stat/1.1.9-SNAPSHOT/maven-metadata.xml (2 KB at 38.1 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sensitiveword/1.1.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sensitiveword/1.1.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sensitiveword/1.1.1-SNAPSHOT/maven-metadata.xml (2 KB at 56.5 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sensitiveword/1.1.1-SNAPSHOT/maven-metadata.xml (2 KB at 27.6 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.0-SNAPSHOT/maven-metadata.xml (265 B at 13.6 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-core/1.2.0-SNAPSHOT/maven-metadata.xml (265 B at 8.6 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.0-SNAPSHOT/maven-metadata.xml (268 B at 13.1 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/telware/sep-project/1.2.0-SNAPSHOT/maven-metadata.xml (268 B at 7.7 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.0-SNAPSHOT/maven-metadata.xml (273 B at 8.1 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-sitp/1.1.0-SNAPSHOT/maven-metadata.xml (273 B at 6.2 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.2-SNAPSHOT/maven-metadata.xml (272 B at 15.6 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-ama/1.0.2-SNAPSHOT/maven-metadata.xml (272 B at 8.6 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.0.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.0.1-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-nma/1.0.1-SNAPSHOT/component-nma-1.0.1-SNAPSHOT.pom
+[WARNING] The POM for com.component:component-nma:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-nma:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-nma:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-nma:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[WARNING] The POM for com.component:component-nma:jar:1.0.1-SNAPSHOT is missing, no dependency information available
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.0.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.0.2-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.0.2-SNAPSHOT/maven-metadata.xml (274 B at 11.6 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-memdb/1.0.2-SNAPSHOT/maven-metadata.xml (274 B at 8.4 KB/sec)
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloading: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.1.0-SNAPSHOT/maven-metadata.xml
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.1.0-SNAPSHOT/maven-metadata.xml (272 B at 14.8 KB/sec)
+[INFO] Downloaded: http://192.168.0.213/nexus/content/groups/public/com/component/component-eds/1.1.0-SNAPSHOT/maven-metadata.xml (272 B at 9.5 KB/sec)

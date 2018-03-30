@@ -15,8 +15,8 @@ import org.apache.commons.io.FileUtils;
 public class ContentToString {
 
     public static void main(String[] args) {
-        contentToString(new File("content.txt"));
-        contentToString(new File("content2.txt"));
+        contentToString(new File("c11_queryBalance.xml"));
+        // contentToString(new File("content2.txt"));
     }
 
     public static void contentToString(File file) {

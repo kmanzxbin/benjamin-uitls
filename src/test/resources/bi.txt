@@ -1,0 +1,8 @@
+        if (biStat.getDb_num1() != 0) {
+            if (biStatConfig != null && biStatConfig.isResetDb_num1()) {
+                setPart += ", DB_NUM1 = ?";
+            } else {
+                setPart += ", DB_NUM1 = DB_NUM1 + ?";
+            }
+            paramList.add("" + biStat.getDb_num1());
+        }

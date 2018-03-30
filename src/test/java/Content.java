@@ -1,0 +1,22 @@
+public class Content{
+    private static String template = ""
+        + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://com.ztesoft.zsmart/xsd\">\n"
+        + "   <soapenv:Header>\n"
+        + "      <xsd:AuthHeader>\n"
+        + "         <Username>${username}</Username>\n"
+        + "         <Password>${password}</Password>\n"
+        + "      </xsd:AuthHeader>\n"
+        + "   </soapenv:Header>\n"
+        + "   <soapenv:Body>\n"
+        + "      <xsd:DeductFeeRequest>\n"
+        + "         <TransactionSN>${transactionSN}</TransactionSN>\n"
+        + "         <TransactionDesc>${transactionDesc}</TransactionDesc>\n"
+        + "         <Channel_ID>${channelID}</Channel_ID>\n"
+        + "         <MSISDN>${msisdn}</MSISDN>\n"
+        + "         <AccountCode>${accountCode}</AccountCode>\n"
+        + "         <AcctResCode>${acctResCode}</AcctResCode>\n"
+        + "         <DeductBalance>${deductBalance}</DeductBalance>\n"
+        + "      </xsd:DeductFeeRequest>\n"
+        + "   </soapenv:Body>\n"
+        + "</soapenv:Envelope>\n";
+}
