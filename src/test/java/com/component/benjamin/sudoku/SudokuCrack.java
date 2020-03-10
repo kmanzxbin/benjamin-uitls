@@ -1,4 +1,4 @@
-package com.component.benjamin.utils;
+package com.component.benjamin.sudoku;
 
 import java.util.ArrayList;
 import java.util.Arrays;

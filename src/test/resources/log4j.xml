@@ -23,7 +23,7 @@
         <level value="ERROR" />
     </logger>
     <logger name="com.component">
-        <level value="INFO" />
+        <level value="debug" />
     </logger>
     <root>
         <level value="DEBUG" />
