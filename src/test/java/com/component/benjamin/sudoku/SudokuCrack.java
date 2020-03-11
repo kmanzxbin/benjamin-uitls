@@ -12,11 +12,11 @@ import java.util.Set;
 public class SudokuCrack {
     public static void main(String[] args) {
         // 生成候选数字表,9行9列，每个格子有9个数字
-        int[][][] candi = new int[9][9][9];
+        int[][][] hint = new int[9][9][9];
         // 初始化候选数字表
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                candi[i][j] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                hint[i][j] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 ;
             }
         }
@@ -53,19 +53,19 @@ public class SudokuCrack {
 
         };
 
-        if (isOkSudo(candi, sudo)) {
+        if (isOkSudo(hint, sudo)) {
         } else {
             System.err.println("This is not illegal ");
             return;
         }
 
-        crack(candi, sudo);
+        crack(hint, sudo);
 
         // 获取隐形数组中两个相等的数
-        List<CandiInfo> equalCandi = getEqualCandi(candi, sudo);
+        List<HintInfo> equalHint = getEqualHint(hint, sudo);
 
         // 获取其中一个进行试探。
-        for (CandiInfo info : equalCandi) {
+        for (HintInfo info : equalHint) {
 
             // 获取坐标
             String[] location = info.location.split("\\|");
@@ -83,15 +83,15 @@ public class SudokuCrack {
                     "开始进行试探：data=" + data[0] + ", " + data[1] + " 位置：" + aRow
                             + "-" + aColumn + ", " + bRow + "-" + bColumn);
 
-            if (isRight(candi, sudo, aRow, aColumn, bRow, bColumn, data[0],
+            if (isRight(hint, sudo, aRow, aColumn, bRow, bColumn, data[0],
                     data[1])) {
-                modifySudoAndCandi(candi, sudo, aRow, aColumn, data[0]);
-                modifySudoAndCandi(candi, sudo, bRow, bColumn, data[1]);
+                modifySudoAndHint(hint, sudo, aRow, aColumn, data[0]);
+                modifySudoAndHint(hint, sudo, bRow, bColumn, data[1]);
             } else {
-                modifySudoAndCandi(candi, sudo, aRow, aColumn, data[1]);
-                modifySudoAndCandi(candi, sudo, bRow, bColumn, data[0]);
+                modifySudoAndHint(hint, sudo, aRow, aColumn, data[1]);
+                modifySudoAndHint(hint, sudo, bRow, bColumn, data[0]);
             }
-            crack(candi, sudo);
+            crack(hint, sudo);
         }
 
         System.out.println("解析完成：");
@@ -102,7 +102,7 @@ public class SudokuCrack {
 
     /**
      * 试探这样的组合是否正确
-     * @param candi
+     * @param hint
      * @param sudo
      * @param aRow
      * @param aColumn
@@ -112,32 +112,32 @@ public class SudokuCrack {
      * @param data1
      * @return
      */
-    private static boolean isRight(int[][][] candi, int[][] sudo, int aRow,
+    private static boolean isRight(int[][][] hint, int[][] sudo, int aRow,
             int aColumn, int bRow, int bColumn, int data0, int data1) {
-        int[][][] deepCandiCopy = new int[9][9][9];
+        int[][][] deepHintCopy = new int[9][9][9];
         for (int i = 0; i < 9; i++) {
-            deepCandiCopy[i] = candi[i].clone();
+            deepHintCopy[i] = hint[i].clone();
         }
         int[][] deepSudoCopy = new int[9][9];
         for (int i = 0; i < 9; i++) {
             deepSudoCopy[i] = sudo[i].clone();
         }
-        modifySudoAndCandi(deepCandiCopy, deepSudoCopy, aRow, aColumn, data0);
-        modifySudoAndCandi(deepCandiCopy, deepSudoCopy, bRow, bColumn, data1);
+        modifySudoAndHint(deepHintCopy, deepSudoCopy, aRow, aColumn, data0);
+        modifySudoAndHint(deepHintCopy, deepSudoCopy, bRow, bColumn, data1);
 
-        crack(deepCandiCopy, deepSudoCopy);
+        crack(deepHintCopy, deepSudoCopy);
 
-        return isOkSudo(deepCandiCopy, deepSudoCopy);
+        return isOkSudo(deepHintCopy, deepSudoCopy);
     }
 
     /**
      * 隐藏数法解析数独
-     * @param candi 隐藏数数组
+     * @param hint 隐藏数数组
      * @param sudo 要解的数独
      */
-    private static void crack(int[][][] candi, int[][] sudo) {
+    private static void crack(int[][][] hint, int[][] sudo) {
 
-        eliminateCandidateNumbers(candi, sudo);
+        eliminateHintdateNumbers(hint, sudo);
 
         // 一轮结束后，查看隐形数组里有没有单个的，如果有继续递归一次
         boolean flag = false;
@@ -145,7 +145,7 @@ public class SudokuCrack {
             for (int q = 0; q < 9; q++) {
                 int f = sudo[k][q];
                 if (f == 0) {
-                    int[] tmp = candi[k][q];
+                    int[] tmp = hint[k][q];
                     Set<Integer> s = new HashSet<>();
                     for (int t = 0; t < tmp.length; t++) {
                         if (tmp[t] > 0) {
@@ -155,7 +155,7 @@ public class SudokuCrack {
                     // 说明有单一成数据可以用的
                     if (s.size() == 1) {
                         flag = true;
-                        modifySudoAndCandi(candi, sudo, k, q, s.stream()
+                        modifySudoAndHint(hint, sudo, k, q, s.stream()
                                 .mapToInt(Integer::intValue).toArray()[0]);
                     }
                 }
@@ -163,46 +163,46 @@ public class SudokuCrack {
         }
         // 如果有确定的单个数，进行递归一次
         if (flag) {
-            crack(candi, sudo);
+            crack(hint, sudo);
         }
         // 查看行有没有唯一数字，有就递归一次
-        flag = checkRow(candi, sudo);
+        flag = checkRow(hint, sudo);
         if (flag) {
-            crack(candi, sudo);
+            crack(hint, sudo);
         }
         // 查看列有没有唯一数字，有就递归一次
-        flag = checkColumn(candi, sudo);
+        flag = checkColumn(hint, sudo);
         if (flag) {
-            crack(candi, sudo);
+            crack(hint, sudo);
         }
     }
 
     /**
      * 剔除数组中的候选数字,剔除行、列、宫
-     * @param candi
+     * @param hint
      * @param sudo
      */
-    private static void eliminateCandidateNumbers(int[][][] candi,
+    private static void eliminateHintdateNumbers(int[][][] hint,
             int[][] sudo) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 int num = sudo[i][j];
                 // 剔除备选区数字
                 if (num > 0) {
-                    candi[i][j] = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                    hint[i][j] = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                     for (int m = 0; m < 9; m++) {
-                        int[] r = candi[i][m];
+                        int[] r = hint[i][m];
                         r[num - 1] = 0;
-                        int[] c = candi[m][j];
+                        int[] c = hint[m][j];
                         c[num - 1] = 0;
                     }
                     // 摒除宫里的唯一性
                     // 取整,获取宫所在数据
-                    int palaceRow = i / 3;
-                    int palaceColumn = j / 3;
+                    int boxRow = i / 3;
+                    int boxColumn = j / 3;
                     for (int m = 0; m < 3; m++) {
                         for (int n = 0; n < 3; n++) {
-                            int[] p = candi[palaceRow * 3 + m][palaceColumn * 3
+                            int[] p = hint[boxRow * 3 + m][boxColumn * 3
                                     + n];
                             p[num - 1] = 0;
                         }
@@ -214,32 +214,32 @@ public class SudokuCrack {
 
     /**
      * 修改数独的值并剔除隐形数字
-     * @param candi
+     * @param hint
      * @param sudo
      * @param row
      * @param column
      * @param v
      */
-    private static void modifySudoAndCandi(int[][][] candi, int[][] sudo,
+    private static void modifySudoAndHint(int[][][] hint, int[][] sudo,
             int row, int column, int v) {
         // 修改数独的值
         sudo[row][column] = v;
 
         // 剔除备选区数字
-        candi[row][column] = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        hint[row][column] = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         for (int m = 0; m < 9; m++) {
-            int[] r = candi[row][m];
+            int[] r = hint[row][m];
             r[v - 1] = 0;
-            int[] c = candi[m][column];
+            int[] c = hint[m][column];
             c[v - 1] = 0;
         }
         // 摒除宫里的唯一性
         // 取整,获取宫所在数据
-        int palaceRow = row / 3;
-        int palaceColumn = column / 3;
+        int boxRow = row / 3;
+        int boxColumn = column / 3;
         for (int m = 0; m < 3; m++) {
             for (int n = 0; n < 3; n++) {
-                int[] p = candi[palaceRow * 3 + m][palaceColumn * 3 + n];
+                int[] p = hint[boxRow * 3 + m][boxColumn * 3 + n];
                 p[v - 1] = 0;
             }
         }
@@ -247,43 +247,43 @@ public class SudokuCrack {
 
     /**
      * 查看行中的隐形数组有没有唯一存在的候选值
-     * @param candi
+     * @param hint
      * @param sudo
      * @return
      */
-    private static boolean checkRow(int[][][] candi, int[][] sudo) {
+    private static boolean checkRow(int[][][] hint, int[][] sudo) {
         boolean flag = false;
         for (int i = 0; i < 9; i++) {
-            Map<String, Set<Integer>> candiMap = new HashMap<>();
+            Map<String, Set<Integer>> hintMap = new HashMap<>();
             int[] row = sudo[i];
             for (int j = 0; j < 9; j++) {
                 if (row[j] == 0) {
-                    int[] tmp = candi[i][j];
+                    int[] tmp = hint[i][j];
                     Set<Integer> set = new HashSet<>();
                     for (int k = 0; k < tmp.length; k++) {
                         if (tmp[k] > 0) {
                             set.add(tmp[k]);
                         }
                     }
-                    candiMap.put(String.valueOf(i) + "-" + String.valueOf(j),
+                    hintMap.put(String.valueOf(i) + "-" + String.valueOf(j),
                             set);
                 }
             }
-            if (candiMap.size() > 0) {
-                Set<String> keys = candiMap.keySet();
+            if (hintMap.size() > 0) {
+                Set<String> keys = hintMap.keySet();
                 Iterator iterator = keys.iterator();
                 while (iterator.hasNext()) {
                     String tKey = (String) iterator.next();
                     // 要查看的集合
-                    Set<Integer> set = deepCopySet(candiMap.get(tKey));
+                    Set<Integer> set = deepCopySet(hintMap.get(tKey));
                     // 深复制
-                    Set<String> tmpKeys = candiMap.keySet();
+                    Set<String> tmpKeys = hintMap.keySet();
                     Iterator tmpKeyIterator = tmpKeys.iterator();
                     while (tmpKeyIterator.hasNext()) {
                         String tmpKey = (String) tmpKeyIterator.next();
                         // 取交集
                         if (!tKey.equals(tmpKey)) {
-                            set.removeAll(candiMap.get(tmpKey));
+                            set.removeAll(hintMap.get(tmpKey));
                         }
                     }
                     // 交集取完，集合空了,看下一个结合有没有
@@ -294,7 +294,7 @@ public class SudokuCrack {
                         if (set.size() == 1) {
                             String[] ks = tKey.split("-");
                             flag = true;
-                            modifySudoAndCandi(candi, sudo,
+                            modifySudoAndHint(hint, sudo,
                                     Integer.parseInt(ks[0]),
                                     Integer.parseInt(ks[1]),
                                     set.stream().mapToInt(Integer::intValue)
@@ -309,42 +309,42 @@ public class SudokuCrack {
 
     /**
      * 查看列中的隐形数组有没有唯一存在的候选值
-     * @param candi
+     * @param hint
      * @param sudo
      * @return
      */
-    private static boolean checkColumn(int[][][] candi, int[][] sudo) {
+    private static boolean checkColumn(int[][][] hint, int[][] sudo) {
         boolean flag = false;
         for (int i = 0; i < 9; i++) {
-            Map<String, Set<Integer>> candiMap = new HashMap<>();
+            Map<String, Set<Integer>> hintMap = new HashMap<>();
             for (int j = 0; j < 9; j++) {
                 if (sudo[j][i] == 0) {
-                    int[] tmp = candi[j][i];
+                    int[] tmp = hint[j][i];
                     Set<Integer> set = new HashSet<>();
                     for (int k = 0; k < tmp.length; k++) {
                         if (tmp[k] > 0) {
                             set.add(tmp[k]);
                         }
                     }
-                    candiMap.put(String.valueOf(i) + "-" + String.valueOf(j),
+                    hintMap.put(String.valueOf(i) + "-" + String.valueOf(j),
                             set);
                 }
             }
-            if (candiMap.size() > 0) {
-                Set<String> keys = candiMap.keySet();
+            if (hintMap.size() > 0) {
+                Set<String> keys = hintMap.keySet();
                 Iterator iterator = keys.iterator();
                 while (iterator.hasNext()) {
                     String tKey = (String) iterator.next();
                     // 要查看的集合
-                    Set<Integer> set = deepCopySet(candiMap.get(tKey));
+                    Set<Integer> set = deepCopySet(hintMap.get(tKey));
                     // 深复制
-                    Set<String> tmpKeys = candiMap.keySet();
+                    Set<String> tmpKeys = hintMap.keySet();
                     Iterator tmpKeyIterator = tmpKeys.iterator();
                     while (tmpKeyIterator.hasNext()) {
                         String tmpKey = (String) tmpKeyIterator.next();
                         // 取交集
                         if (!tKey.equals(tmpKey)) {
-                            set.removeAll(candiMap.get(tmpKey));
+                            set.removeAll(hintMap.get(tmpKey));
                         }
                     }
                     // 交集取完，集合空了,看下一个结合有没有
@@ -355,7 +355,7 @@ public class SudokuCrack {
                         if (set.size() == 1) {
                             String[] ks = tKey.split("-");
                             flag = true;
-                            modifySudoAndCandi(candi, sudo,
+                            modifySudoAndHint(hint, sudo,
                                     Integer.parseInt(ks[1]),
                                     Integer.parseInt(ks[0]),
                                     set.stream().mapToInt(Integer::intValue)
@@ -372,20 +372,20 @@ public class SudokuCrack {
      * 获取隐形数字中宫中两个相等的数字
      * @return
      */
-    private static List<CandiInfo> getEqualCandi(int[][][] candi,
+    private static List<HintInfo> getEqualHint(int[][][] hint,
             int[][] sudo) {
         // 找到两个相等数字
         // 遍历宫
-        List<CandiInfo> maps = new ArrayList<>();
+        List<HintInfo> maps = new ArrayList<>();
         for (int m = 0; m < 3; m++) {
             for (int n = 0; n < 3; n++) {
-                Map<String, Set<Integer>> palaceMap = new HashMap<>();
+                Map<String, Set<Integer>> boxMap = new HashMap<>();
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         int sudoRow = m * 3 + i;
                         int sudoColumn = n * 3 + j;
                         if (sudo[sudoRow][sudoColumn] == 0) {
-                            int[] tmpX = candi[sudoRow][sudoColumn];
+                            int[] tmpX = hint[sudoRow][sudoColumn];
                             Set<Integer> set = new HashSet<>();
                             for (int k = 0; k < tmpX.length; k++) {
                                 if (tmpX[k] > 0) {
@@ -393,7 +393,7 @@ public class SudokuCrack {
                                 }
                             }
                             if (set.size() == 2) {
-                                palaceMap.put(
+                                boxMap.put(
                                         String.valueOf(sudoRow) + "-"
                                                 + String.valueOf(sudoColumn),
                                         set);
@@ -402,7 +402,7 @@ public class SudokuCrack {
                     }
                 }
 
-                Set<String> pSet = palaceMap.keySet();
+                Set<String> pSet = boxMap.keySet();
                 Iterator pIterator = pSet.iterator();
                 while (pIterator.hasNext()) {
                     String key = (String) pIterator.next();
@@ -410,32 +410,32 @@ public class SudokuCrack {
                     while (tmpIterator.hasNext()) {
                         String tmpKey = (String) tmpIterator.next();
                         if (!key.equals(tmpKey)) {
-                            Set<Integer> tmpIntSet = palaceMap.get(tmpKey);
-                            Set<Integer> palaceIntSet = deepCopySet(
-                                    palaceMap.get(key));
-                            palaceIntSet.removeAll(tmpIntSet);
+                            Set<Integer> tmpIntSet = boxMap.get(tmpKey);
+                            Set<Integer> boxIntSet = deepCopySet(
+                                    boxMap.get(key));
+                            boxIntSet.removeAll(tmpIntSet);
                             // 说明两个集合相等
-                            if (palaceIntSet.size() == 0) {
-                                CandiInfo candiInfo = new CandiInfo();
-                                candiInfo.location = key + "|" + tmpKey;
-                                candiInfo.nums = palaceMap.get(key);
-                                maps.add(candiInfo);
+                            if (boxIntSet.size() == 0) {
+                                HintInfo hintInfo = new HintInfo();
+                                hintInfo.location = key + "|" + tmpKey;
+                                hintInfo.nums = boxMap.get(key);
+                                maps.add(hintInfo);
                             }
                         }
                     }
                 }
             }
         }
-        List<CandiInfo> infos = new ArrayList<>();
-        CandiInfo candiInfo = null;
-        for (CandiInfo info : maps) {
-            if (candiInfo == null) {
-                candiInfo = info;
+        List<HintInfo> infos = new ArrayList<>();
+        HintInfo hintInfo = null;
+        for (HintInfo info : maps) {
+            if (hintInfo == null) {
+                hintInfo = info;
             } else {
-                if (candiInfo.nums.equals(info.nums)) {
+                if (hintInfo.nums.equals(info.nums)) {
                     infos.add(info);
                 }
-                candiInfo = info;
+                hintInfo = info;
             }
         }
         return infos;
@@ -446,11 +446,11 @@ public class SudokuCrack {
      * 思路：
      * 1. 校验行和列有没有重复的数字
      * 2. 校验数独是0的格子，对应的隐形数组还有没有值，如果没有候选值，肯定是某一个地方填错了
-     * @param candi  隐形数组
+     * @param hint  隐形数组
      * @param sudo  数独二维数组
      * @return
      */
-    private static boolean isOkSudo(int[][][] candi, int[][] sudo) {
+    private static boolean isOkSudo(int[][][] hint, int[][] sudo) {
         boolean flag = true;
         for (int i = 0; i < 9; i++) {
             // 校验行
@@ -482,7 +482,7 @@ public class SudokuCrack {
         for (int m = 0; m < 9; m++) {
             for (int n = 0; n < 9; n++) {
                 if (sudo[m][n] == 0) {
-                    int[] s = candi[m][n];
+                    int[] s = hint[m][n];
                     Set<Integer> set = new HashSet<>();
                     for (int p = 0; p < s.length; p++) {
                         if (s[p] > 0) {
@@ -513,7 +513,7 @@ public class SudokuCrack {
         return deepCopy;
     }
 
-    public static class CandiInfo {
+    public static class HintInfo {
         String location;
         Set<Integer> nums;
     }

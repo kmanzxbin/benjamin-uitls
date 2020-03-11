@@ -1,6 +1,11 @@
 package com.component.benjamin.sudoku;
 
-public class Array extends GridGroup {
+/**
+ * 行、列共用的队列
+ * @author Benjamin Zheng
+ *
+ */
+public class Queue extends Region {
 
     String name;
     int pos;
@@ -8,8 +13,8 @@ public class Array extends GridGroup {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Array [name=").append(name).append(", pos=").append(pos)
-                .append(", grids=").append(grids).append(", missingNums=")
+        builder.append("Queue [name=").append(name).append(", pos=").append(pos)
+                .append(", units=").append(units).append(", missingNums=")
                 .append(missingNums).append("]");
         return builder.toString();
     }

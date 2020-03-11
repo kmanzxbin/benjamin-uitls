@@ -1,13 +1,17 @@
 package com.component.benjamin.sudoku;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,31 +49,88 @@ public class BenSudokuCrack {
         mySudokuCrack.crack(matrix);
     }
 
-    Sudoku sudoku;
+    Grid grid;
 
     int[][] matrix;
 
     public void crack(int[][] matrix) {
-        sudoku = parseSudoku(matrix);
-        int blankGridCountBeforeCrack = sudoku.blankGrids.size();
+        grid = parseGrid(matrix);
+        int blankGridCountBeforeCrack = grid.blankUnits.size();
+
+        int round = 0;
         while (blankGridCountBeforeCrack > 0) {
+            round++;
+            log.info("round {}", round);
             basicExclude();
             crackTheHiddenOne();
-            if (sudoku.blankGrids.size() == blankGridCountBeforeCrack) {
-                // 尝试查询有两个候选数的格子
+            excludeByBoxSameQueueHints();
+            if (grid.blankUnits.size() == blankGridCountBeforeCrack) {
                 guess();
-                throw new RuntimeException("no grid for cracked!");
+                // 尝试查询有两个候选数的格子
+                log.warn("can not crack this grid!\n{}",
+                        StringUtils.join(grid.blankUnits, "\n"));
+                System.exit(1);
             }
-            blankGridCountBeforeCrack = sudoku.blankGrids.size();
+            blankGridCountBeforeCrack = grid.blankUnits.size();
         }
         log.info("crack finished!");
 
         print();
     }
 
+    /**
+     * 如果一个宫里有三个或者两个相同行或者列的空格子，则可以排除其他列的这些值的候选数
+     */
+    boolean excludeByBoxSameQueueHints() {
+        Set<Box> boxs = grid.boxes.stream()
+                .filter(t -> t.missingNums.size() <= 3)
+                .collect(Collectors.toSet());
+        if (boxs.size() == 0) {
+
+            return false;
+        }
+        AtomicInteger counter = new AtomicInteger(0);
+
+        boxs.forEach(p -> {
+            List<Unit> grids = p.getBlankUnits();
+            if (grids.size() != p.missingNums.size()) {
+                log.error(
+                        "logical error! missing numbers is not equals blank grids in {}",
+                        p);
+                System.exit(1);
+            }
+            if (grids.get(0).row == grids.get(1).row && ((grids.size() > 2)
+                    ? grids.get(1).row == grids.get(2).row
+                    : true)) {
+                // 行相同 将其他同一行其他宫格子的候选数移除这三个格子的候选数
+                grid.blankUnits.stream().filter(
+                        g -> g.row == grids.get(0).row && !grids.contains(g))
+                        .forEach(g -> g.hints.removeAll(p.missingNums));
+                counter.incrementAndGet();
+                log.info("remove hint num {} from same row {} by box {}",
+                        p.missingNums, grids.get(0).row, p.name);
+
+            } else if (grids.get(0).column == grids.get(1).column
+                    && ((grids.size() > 2)
+                            ? grids.get(1).column == grids.get(2).column
+                            : true)) {
+                // 列相同 将其他同一列其他宫格子的候选数移除这三个格子的候选数
+                grid.blankUnits.stream()
+                        .filter(g -> g.column == grids.get(0).column
+                                && !grids.contains(g))
+                        .forEach(g -> g.hints.removeAll(p.missingNums));
+                counter.incrementAndGet();
+                log.info("remove hint num {} from same column {} by box {}",
+                        p.missingNums, grids.get(0).row, p.name);
+            }
+        });
+
+        return counter.get() > 0;
+    }
+
     void guess() {
         // 获取一个已经填入的最多的数字
-        Map<Integer, Long> hotNumbers = sudoku.grids.stream()
+        Map<Integer, Long> hotNumbers = grid.units.stream()
                 .filter(t -> t.num > 0).map(t -> t.num)
                 .collect(Collectors.groupingBy(Function.identity(),
                         Collectors.counting()));
@@ -85,7 +146,7 @@ public class BenSudokuCrack {
     }
 
     void print() {
-        sudoku.grids.forEach(t -> this.matrix[t.row][t.line] = t.num);
+        grid.units.forEach(t -> this.matrix[t.row][t.column] = t.num);
         for (int i = 0; i < 9; i++) {
             System.out.println(Arrays.toString(matrix[i]));
         }
@@ -96,75 +157,81 @@ public class BenSudokuCrack {
      * @param matrix
      * @return
      */
-    Sudoku parseSudoku(int[][] matrix) {
+    Grid parseGrid(int[][] matrix) {
 
         this.matrix = matrix;
-        sudoku = new Sudoku();
+        grid = new Grid();
 
-        parseGrids();
+        parseUnits();
 
         // 解析所有的宫 设置每个空格子的候选数
-        parsePalaces();
+        parseBoxs();
 
         // 解析所有的行和列 设置设置每个格子的候选数
         parseRows();
         parseLines();
 
-        return sudoku;
+        return grid;
     }
 
-    void parseGrids() {
+    void parseUnits() {
 
         // 先处理每个格子
         for (int row = 0; row < 9; row++) {
-            for (int line = 0; line < 9; line++) {
+            for (int column = 0; column < 9; column++) {
 
-                Grid grid = new Grid();
-                grid.name = getName(row, line);
-                grid.row = row;
-                grid.line = line;
-                grid.pos = "" + row + line;
-                grid.num = matrix[row][line];
-                if (grid.num == 0) {
-                    grid.candis = new HashSet<>(defaultCandis);
+                Unit unit = new Unit();
+                unit.name = getName(row, column);
+                unit.row = row;
+                unit.column = column;
+                unit.pos = "" + row + column;
+                unit.num = matrix[row][column];
+                if (unit.num == 0) {
+                    unit.hints = new HashSet<>(defaultHints);
                 }
-                grid.sudoku = sudoku;
+                unit.grid = grid;
 
-                sudoku.grids.add(grid);
+                grid.units.add(unit);
 
             }
         }
 
-        sudoku.blankGrids = sudoku.grids.stream().filter(t -> t.num == 0)
+        grid.blankUnits = grid.units.stream().filter(t -> t.num == 0)
                 .collect(Collectors.toList());
+
+        int variableUnit = 81 - grid.blankUnits.size();
+        if (variableUnit < 17) {
+            throw new RuntimeException("sudoku variable unit less than 17!");
+        }
+        log.info("sudoku variable unit: {}", variableUnit);
     }
 
-    void parsePalaces() {
+    void parseBoxs() {
 
         for (int row = 0; row < 3; row++) {
             int rowFinal = row;
-            for (int line = 0; line < 3; line++) {
-                int lineFinal = line;
-                Palace palace = new Palace();
-                // palace.row = row;
-                // palace.line = line;
-                // palace.pos = "" + row + line;
-                palace.name = (row * 3) + (line + 1) + "";
-                // palace.missingNums = new HashSet<>(defaultCandis);
-                sudoku.palaces.add(palace);
+            for (int column = 0; column < 3; column++) {
+                int columnFinal = column;
+                Box box = new Box();
+                // box.row = row;
+                // box.column = column;
+                // box.pos = "" + row + column;
+                box.name = (row * 3) + (column + 1) + "";
+                // box.missingNums = new HashSet<>(defaultHints);
+                grid.boxes.add(box);
 
                 // 得到属于这个宫的格子
-                palace.grids = sudoku.grids.stream()
+                box.units = grid.units.stream()
                         .filter(t -> ((t.row >= rowFinal * 3
                                 && t.row < (rowFinal + 1) * 3)
-                                && (t.line >= lineFinal * 3
-                                        && t.line < (lineFinal + 1) * 3)))
+                                && (t.column >= columnFinal * 3
+                                        && t.column < (columnFinal + 1) * 3)))
                         .collect(Collectors.toList());
-                palace.grids.forEach(t -> t.palace = palace);
+                box.units.forEach(t -> t.box = box);
 
-                handleGridGroup(palace);
-                log.info("add palace {}", palace);
-                sudoku.palaces.add(palace);
+                handleGridGroup(box);
+                log.info("add box {}", box);
+                grid.boxes.add(box);
             }
         }
 
@@ -172,79 +239,78 @@ public class BenSudokuCrack {
 
     void parseRows() {
         for (int row = 0; row < 9; row++) {
-            Array rowArray = new Array();
-            rowArray.pos = row;
-            rowArray.name = getRowName(row);
+            Queue rowQueue = new Queue();
+            rowQueue.pos = row;
+            rowQueue.name = getRowName(row);
             final int rowFinal = row;
-            rowArray.grids = sudoku.grids.stream()
-                    .filter(t -> t.row == rowFinal)
+            rowQueue.units = grid.units.stream().filter(t -> t.row == rowFinal)
                     .collect(Collectors.toList());
 
-            handleGridGroup(rowArray);
+            handleGridGroup(rowQueue);
 
-            rowArray.grids.forEach(t -> t.rowArray = rowArray);
-            sudoku.rowArrays.add(rowArray);
-            log.info("add row {}", rowArray);
+            rowQueue.units.forEach(t -> t.rowQueue = rowQueue);
+            grid.rowQueues.add(rowQueue);
+            log.info("add row {}", rowQueue);
         }
     }
 
     void parseLines() {
-        for (int line = 0; line < 9; line++) {
-            Array lineArray = new Array();
-            lineArray.pos = line;
-            lineArray.name = getLineName(line);
-            final int lineFinal = line;
-            lineArray.grids = sudoku.grids.stream()
-                    .filter(t -> t.line == lineFinal)
+        for (int column = 0; column < 9; column++) {
+            Queue columnQueue = new Queue();
+            columnQueue.pos = column;
+            columnQueue.name = getLineName(column);
+            final int columnFinal = column;
+            columnQueue.units = grid.units.stream()
+                    .filter(t -> t.column == columnFinal)
                     .collect(Collectors.toList());
 
-            handleGridGroup(lineArray);
-            lineArray.grids.forEach(t -> t.lineArray = lineArray);
-            sudoku.lineArrays.add(lineArray);
-            log.info("add line {}", lineArray.toString());
+            handleGridGroup(columnQueue);
+            columnQueue.units.forEach(t -> t.columnQueue = columnQueue);
+            grid.columnQueues.add(columnQueue);
+            log.info("add column {}", columnQueue.toString());
         }
     }
 
-    Set<Integer> getFilledNums(GridGroup gridGroup) {
-        return gridGroup.grids.stream().filter(t -> t.num > 0).map(t -> t.num)
+    Set<Integer> getFilledNums(Region gridGroup) {
+        return gridGroup.units.stream().filter(t -> t.num > 0).map(t -> t.num)
                 .collect(Collectors.toSet());
     }
 
     /**
      * 设置格子组缺少的数
      * 删除每个格子多余的候选数
-     * @param gridGroup
+     * @param region
      */
-    void handleGridGroup(GridGroup gridGroup) {
+    void handleGridGroup(Region region) {
 
-        Set<Integer> filledNums = getFilledNums(gridGroup);
-        gridGroup.missingNums = getMissingNums(filledNums);
+        Set<Integer> filledNums = getFilledNums(region);
+        region.missingNums = getMissingNums(filledNums);
         // 从每个格子的候选数里移除已经填好的数
-        gridGroup.grids.stream().filter(t -> t.num == 0).forEach(t -> {
-            t.candis.removeAll(filledNums);
+        region.units.stream().filter(t -> t.num == 0).forEach(t -> {
+            t.hints.removeAll(filledNums);
         });
     }
 
-    Set<Integer> getFullCandis() {
-        return new HashSet<>(defaultCandis);
+    Set<Integer> getFullHints() {
+        return new HashSet<>(defaultHints);
     }
 
     Set<Integer> getMissingNums(Set<Integer> filledNums) {
-        Set<Integer> missingNum = getFullCandis();
+        Set<Integer> missingNum = getFullHints();
         missingNum.removeAll(filledNums);
         return missingNum;
     }
 
     /**
      * 获取一列的数字
-     * @param sudoku
+     * @param grid
      * @param columnId
      * @return
      */
-    Set<Integer> getNumOnColumn(int[][] sudoku, int columnId) {
+    Set<Integer> getNumOnColumn(int[][] grid, int columnId) {
         Set<Integer> nums = new HashSet<>();
-        for (int i = 0; i < sudoku.length; i++) {
-            int num = sudoku[i][columnId];
+        for (int i = 0; i < grid.length; i++) {
+            int num = grid[i][columnId];
             if (num != 0) {
                 nums.add(num);
             }
@@ -252,34 +318,58 @@ public class BenSudokuCrack {
         return nums;
     }
 
+    static void hiddenSingleInRegin(Region region, String regin) {
+
+        for (int i = 1; i <= 9; i++) {
+            int iFinal = i;
+            List<Unit> iUnits = region.units.stream()
+                    .filter(u -> u.hints.contains(iFinal))
+                    .collect(Collectors.toList());
+            if (iUnits.size() == 1) {
+                iUnits.get(0).fillNum(i,
+                        "hiddenSingleInRegin-" + (regin != null ? regin
+                                : region.getClass().getSimpleName()));
+            }
+        }
+
+    }
+
     /**
      * 基本排除法
      */
     void basicExclude() {
 
+        grid.boxes.forEach(t -> hiddenSingleInRegin(t, null));
+        grid.rowQueues.forEach(t -> hiddenSingleInRegin(t, "row"));
+        grid.columnQueues.forEach(t -> hiddenSingleInRegin(t, "column"));
+
         // 格子唯一
-        sudoku.blankGrids.forEach(t -> {
-            if (t.candis.size() == 1) {
-                t.fillNum(t.candis.iterator().next(),
-                        "grid only candidate num");
+        new ArrayList<>(grid.blankUnits).forEach(t -> {
+            if (t.hints.size() == 1) {
+                t.fillNum(t.hints.iterator().next(), "GridSingleHint");
             }
         });
 
         // 行唯一
-        crackGroupSingle(sudoku.rowArrays, "row single");
+        crackReginSingle(grid.rowQueues, "row single");
 
         // 列唯一
-        crackGroupSingle(sudoku.lineArrays, "line single");
+        crackReginSingle(grid.columnQueues, "column single");
 
         // 宫唯一
-        crackGroupSingle(sudoku.palaces, "palace single");
+        crackReginSingle(grid.boxes, "box single");
     }
 
-    void crackGroupSingle(List<? extends GridGroup> gridGroups, String method) {
+    /**
+     * 
+     * @param gridGroups
+     * @param method
+     */
+    void crackReginSingle(List<? extends Region> gridGroups, String method) {
         gridGroups.forEach(t -> {
             if (t.missingNums.size() == 1) {
                 int num = t.missingNums.iterator().next();
-                List<Grid> grids = t.grids.stream().filter(g -> g.num == 0)
+                List<Unit> grids = t.units.stream().filter(g -> g.num == 0)
                         .collect(Collectors.toList());
                 if (grids.size() > 1) {
                     throw new RuntimeException("missing num is only one " + num
@@ -290,61 +380,63 @@ public class BenSudokuCrack {
         });
     }
 
-    String getName(int row, int line) {
-        return getRowName(row) + getLineName(line);
+    String getName(int row, int column) {
+        return getRowName(row) + getLineName(column);
     }
 
     String getRowName(int row) {
         return ((char) (65 + row)) + "";
     }
 
-    String getLineName(int line) {
-        return line + 1 + "";
+    String getLineName(int column) {
+        return column + 1 + "";
     }
 
     // if (grid.num == 0) {
     // blankGrids.add(grid);
-    // Set<Integer> crossCandis = getCandisByCross(matrix, row,
-    // line);
-    // Set<Integer> gridCandis = new HashSet<Integer>(
-    // palace.missingNums);
-    // gridCandis.retainAll(crossCandis);
-    // grid.candis = gridCandis;
-    // if (gridCandis.size() == 1) {
-    // int value = gridCandis.iterator().next();
+    // Set<Integer> crossHints = getHintsByCross(matrix, row,
+    // column);
+    // Set<Integer> gridHints = new HashSet<Integer>(
+    // box.missingNums);
+    // gridHints.retainAll(crossHints);
+    // grid.hints = gridHints;
+    // if (gridHints.size() == 1) {
+    // int value = gridHints.iterator().next();
     // log.info("you can put " + value + " to " + grid.pos);
     // }
     // }
 
-    String getPalacePos(int x, int y) {
+    String getBoxPos(int x, int y) {
         return "" + (x / 3) + (y / 3);
     }
 
-    Set<Integer> defaultCandis = new HashSet<>();
+    Set<Integer> defaultHints = new HashSet<>();
     {
         for (int i = 1; i <= 9; i++) {
-            defaultCandis.add(i);
+            defaultHints.add(i);
         }
     }
 
-    // 遍历数字，将每个数字在每个宫可能出现的位置给列出来，如果确定在宫内只出现一次，则说明摒除得到结果
+    /**
+     *  遍历数字，将每个数字在每个宫可能出现的位置给列出来，如果确定在宫内只出现一次，则说明摒除得到结果
+     */
     void crackTheHiddenOne() {
         for (int num = 1; num <= 9; num++) {
             Set<Integer> rowSets = new HashSet<>();
-            Set<Integer> lineSets = new HashSet<>();
+            Set<Integer> columnSets = new HashSet<>();
             int numFinal = num;
-            sudoku.grids.stream().filter(t -> t.num == numFinal).forEach(t -> {
+            grid.units.stream().filter(t -> t.num == numFinal).forEach(t -> {
                 rowSets.add(t.row);
-                lineSets.add(t.line);
+                columnSets.add(t.column);
             });
 
             // 获取并遍历没有这个数的宫
-            for (Palace palace : sudoku.palaces.stream()
+            for (Box box : grid.boxes.stream()
                     .filter(t -> t.missingNums.contains(numFinal))
                     .collect(Collectors.toSet())) {
 
                 // 获取可以填写这个数的格子
-                Set<Grid> gridSet = getBlankGridInPalaceByNum(palace, num);
+                Set<Unit> gridSet = getBlankGridInBoxByNum(box, num);
 
                 // 从行里过滤出剩余可能存在的格子
                 for (Integer row : rowSets) {
@@ -354,30 +446,30 @@ public class BenSudokuCrack {
                 }
 
                 // 从列里过滤出剩余可能存在的格子
-                for (Integer line : lineSets) {
+                for (Integer column : columnSets) {
                     gridSet = gridSet.stream()
-                            .filter(t -> !t.pos.endsWith("" + line))
+                            .filter(t -> !t.pos.endsWith("" + column))
                             .collect(Collectors.toSet());
                 }
 
                 if (gridSet.size() == 0) {
-                    throw new RuntimeException("no grid for " + num
-                            + " in palace " + palace.name + "!");
+                    throw new RuntimeException(
+                            "no grid for " + num + " in box " + box.name + "!");
                 }
 
                 // 找到唯一位置
                 if (gridSet.size() == 1) {
-                    Grid grid = gridSet.iterator().next();
+                    Unit grid = gridSet.iterator().next();
                     grid.fillNum(num, "hiddenSingle");
                 }
             }
         }
     }
 
-    Set<Grid> getBlankGridInPalaceByNum(Palace palace, int num) {
+    Set<Unit> getBlankGridInBoxByNum(Box box, int num) {
 
-        return palace.grids.stream()
-                .filter(t -> t.num == 0 && t.candis.contains(num))
+        return box.units.stream()
+                .filter(t -> t.num == 0 && t.hints.contains(num))
                 .collect(Collectors.toSet());
     }
 
