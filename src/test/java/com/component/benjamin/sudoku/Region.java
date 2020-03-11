@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class Region {
 
     Grid grid;
+    String name;
     List<Unit> units;
     Set<Integer> missingNums;
 

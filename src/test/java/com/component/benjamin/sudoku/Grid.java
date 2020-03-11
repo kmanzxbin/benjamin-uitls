@@ -32,4 +32,5 @@ public class Grid {
         rowQueues = new ArrayList<>();
         columnQueues = new ArrayList<>();
     }
+
 }

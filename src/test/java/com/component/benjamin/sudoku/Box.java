@@ -8,7 +8,7 @@ package com.component.benjamin.sudoku;
 public class Box extends Region {
 
     // 明文的宫号 1-9
-    String name;
+    // String name;
     // // pos row+column;
     // String pos;
     // // 宫所在数独的行 0-2

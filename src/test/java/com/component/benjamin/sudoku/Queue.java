@@ -7,7 +7,6 @@ package com.component.benjamin.sudoku;
  */
 public class Queue extends Region {
 
-    String name;
     int pos;
 
     @Override

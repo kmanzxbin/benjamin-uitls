@@ -28,6 +28,14 @@ public class Unit {
     // 候选数
     Set<Integer> hints = new HashSet<>();
 
+    public Set<Integer> getHints() {
+        return hints;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     Grid grid;
     // 所在宫
     Box box;
@@ -39,7 +47,7 @@ public class Unit {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Grid [name=").append(name).append(", pos=").append(pos)
+        builder.append("Unit [name=").append(name).append(", pos=").append(pos)
                 .append(", num=").append(num).append(", hints=").append(hints)
                 .append("]");
         return builder.toString();
@@ -50,23 +58,32 @@ public class Unit {
         grid.blankUnits.remove(this);
         hints.clear();
 
+        log.info("filling num {} to {} by {}, {} blank unit remaining", num,
+                name, method, grid.blankUnits.size());
+
         Assert.assertTrue(box.missingNums.remove(num));
         Assert.assertTrue(rowQueue.missingNums.remove(num));
         Assert.assertTrue(columnQueue.missingNums.remove(num));
-        box.units.forEach(t -> {
-            if (t.hints != null)
-                t.hints.remove(num);
+
+        removeHint(num);
+    }
+
+    public void removeHint(int num) {
+        removeHint(box, num);
+        removeHint(rowQueue, num);
+        removeHint(columnQueue, num);
+    }
+
+    public void removeHint(Region region, int num) {
+        region.units.forEach(t -> {
+            if (t.hints != null && t != this)
+                if (t.hints.contains(num)) {
+                    log.info("remove hint {} from unit {} in {}", num, t,
+                            region.name);
+                    t.hints.remove(num);
+                }
+            ;
         });
-        rowQueue.units.forEach(t -> {
-            if (t.hints != null)
-                t.hints.remove(num);
-        });
-        columnQueue.units.forEach(t -> {
-            if (t.hints != null)
-                t.hints.remove(num);
-        });
-        log.info("fill num {} to {} by {}, {} blank unit remain", num, name,
-                method, grid.blankUnits.size());
     }
 
 }

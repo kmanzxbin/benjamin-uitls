@@ -3,15 +3,15 @@ package com.component.benjamin.sudoku;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,11 +40,19 @@ public class BenSudokuCrack {
                 // { 3, 6, 0, 7, 0, 4, 0, 0, 0 }, { 0, 0, 0, 6, 0, 0, 0, 7, 9 },
                 // { 8, 0, 0, 0, 5, 2, 0, 0, 3 },
 
-                { 0, 0, 5, 0, 2, 0, 0, 9, 0 }, { 3, 0, 0, 6, 0, 7, 0, 0, 0 },
-                { 0, 0, 1, 0, 4, 0, 7, 0, 8 }, { 0, 3, 0, 0, 0, 0, 0, 7, 0 },
-                { 2, 0, 8, 0, 0, 0, 3, 0, 4 }, { 0, 4, 0, 0, 0, 0, 0, 2, 0 },
-                { 8, 0, 7, 0, 6, 0, 1, 0, 0 }, { 0, 0, 0, 7, 0, 5, 0, 0, 9 },
-                { 0, 9, 0, 0, 1, 0, 5, 0, 0 }, };
+                { 8, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 3, 6, 0, 0, 0, 0, 0 },
+                { 0, 7, 0, 0, 9, 0, 2, 0, 0 }, { 0, 5, 0, 0, 0, 7, 0, 0, 0 },
+                { 0, 0, 0, 0, 4, 5, 7, 0, 0 }, { 0, 0, 0, 1, 0, 0, 0, 3, 0 },
+                { 0, 0, 1, 0, 0, 0, 0, 6, 0 }, { 0, 0, 8, 5, 0, 0, 0, 1, 0 },
+                { 0, 9, 0, 0, 0, 0, 0, 0, 0 },
+
+                // { 0, 0, 5, 0, 2, 0, 0, 9, 0 }, { 3, 0, 0, 6, 0, 7, 0, 0, 0 },
+                // { 0, 0, 1, 0, 4, 0, 7, 0, 8 }, { 0, 3, 0, 0, 0, 0, 0, 7, 0 },
+                // { 2, 0, 8, 0, 0, 0, 3, 0, 4 }, { 0, 4, 0, 0, 0, 0, 0, 2, 0 },
+                // { 8, 0, 7, 0, 6, 0, 1, 0, 0 }, { 0, 0, 0, 7, 0, 5, 0, 0, 9 },
+                // { 0, 9, 0, 0, 1, 0, 5, 0, 0 },
+
+        };
         BenSudokuCrack mySudokuCrack = new BenSudokuCrack();
         mySudokuCrack.crack(matrix);
     }
@@ -54,7 +62,9 @@ public class BenSudokuCrack {
     int[][] matrix;
 
     public void crack(int[][] matrix) {
-        grid = parseGrid(matrix);
+        checking(matrix, false);
+        this.matrix = matrix;
+        parseGrid(matrix);
         int blankGridCountBeforeCrack = grid.blankUnits.size();
 
         int round = 0;
@@ -62,11 +72,12 @@ public class BenSudokuCrack {
             round++;
             log.info("round {}", round);
             basicExclude();
-            crackTheHiddenOne();
+            hiddenOne();
             excludeByBoxSameQueueHints();
             if (grid.blankUnits.size() == blankGridCountBeforeCrack) {
-                guess();
-                // 尝试查询有两个候选数的格子
+                if (excludeHintsByNumberGroup()) {
+                    continue;
+                }
                 log.warn("can not crack this grid!\n{}",
                         StringUtils.join(grid.blankUnits, "\n"));
                 System.exit(1);
@@ -75,7 +86,76 @@ public class BenSudokuCrack {
         }
         log.info("crack finished!");
 
+        grid.units.forEach(t -> matrix[t.row][t.column] = t.num);
+        checking(matrix, true);
+
         print();
+    }
+
+    void checking(int[][] matrix, boolean finished) {
+        for (int i = 0; i < 9; i++) {
+            Set<Integer> nums = new HashSet<>();
+            for (int j = 0; j < 9; j++) {
+                int num = matrix[i][j];
+                if (num == 0) {
+                    if (finished) {
+                        Assert.fail("have 0 when finished!");
+                    }
+                } else {
+                    Assert.assertTrue("num " + num + " at " + i + j,
+                            nums.add(num));
+                }
+            }
+            if (finished) {
+                Assert.assertEquals(9, nums.size());
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            Set<Integer> nums = new HashSet<>();
+            for (int j = 0; j < 9; j++) {
+                int num = matrix[j][i];
+                if (num == 0) {
+                    if (finished) {
+                        Assert.fail("have 0 when finished!");
+                    }
+                } else {
+                    Assert.assertTrue("num " + num + " at " + i + j,
+                            nums.add(num));
+                }
+            }
+            if (finished) {
+                Assert.assertEquals(9, nums.size());
+            }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+
+                Set<Integer> nums = new HashSet<>();
+                for (int r = 0; r < 3; r++) {
+
+                    for (int c = 0; c < 3; c++) {
+                        int x = i * 3 + r;
+                        int y = j * 3 + c;
+                        int num = matrix[x][y];
+                        if (num == 0) {
+                            if (finished) {
+                                Assert.fail("have 0 when finished!");
+                            }
+                        } else {
+                            Assert.assertTrue("num " + num + " at " + (x) + (y),
+                                    nums.add(num));
+                        }
+                    }
+                }
+                if (finished) {
+                    Assert.assertEquals(9, nums.size());
+                }
+            }
+
+        }
+
     }
 
     /**
@@ -91,12 +171,15 @@ public class BenSudokuCrack {
         }
         AtomicInteger counter = new AtomicInteger(0);
 
-        boxs.forEach(p -> {
-            List<Unit> grids = p.getBlankUnits();
-            if (grids.size() != p.missingNums.size()) {
+        boxs.forEach(t -> {
+            List<Unit> grids = t.getBlankUnits();
+            if (grids.size() < 2) {
+                return;
+            }
+            if (grids.size() != t.missingNums.size()) {
                 log.error(
                         "logical error! missing numbers is not equals blank grids in {}",
-                        p);
+                        t);
                 System.exit(1);
             }
             if (grids.get(0).row == grids.get(1).row && ((grids.size() > 2)
@@ -105,10 +188,10 @@ public class BenSudokuCrack {
                 // 行相同 将其他同一行其他宫格子的候选数移除这三个格子的候选数
                 grid.blankUnits.stream().filter(
                         g -> g.row == grids.get(0).row && !grids.contains(g))
-                        .forEach(g -> g.hints.removeAll(p.missingNums));
+                        .forEach(g -> g.hints.removeAll(t.missingNums));
                 counter.incrementAndGet();
                 log.info("remove hint num {} from same row {} by box {}",
-                        p.missingNums, grids.get(0).row, p.name);
+                        t.missingNums, grids.get(0).row, t.name);
 
             } else if (grids.get(0).column == grids.get(1).column
                     && ((grids.size() > 2)
@@ -118,35 +201,84 @@ public class BenSudokuCrack {
                 grid.blankUnits.stream()
                         .filter(g -> g.column == grids.get(0).column
                                 && !grids.contains(g))
-                        .forEach(g -> g.hints.removeAll(p.missingNums));
+                        .forEach(g -> g.hints.removeAll(t.missingNums));
                 counter.incrementAndGet();
                 log.info("remove hint num {} from same column {} by box {}",
-                        p.missingNums, grids.get(0).row, p.name);
+                        t.missingNums, grids.get(0).row, t.name);
             }
         });
 
         return counter.get() > 0;
     }
 
-    void guess() {
-        // 获取一个已经填入的最多的数字
-        Map<Integer, Long> hotNumbers = grid.units.stream()
-                .filter(t -> t.num > 0).map(t -> t.num)
-                .collect(Collectors.groupingBy(Function.identity(),
-                        Collectors.counting()));
+    /**
+     * 数组排除法
+     * @return
+     */
+    boolean excludeHintsByNumberGroup() {
+        AtomicInteger counter = new AtomicInteger(0);
 
-        Map<Integer, Long> sortMap = new LinkedHashMap<>();
-        hotNumbers.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue((a, b) -> (int) (b - a)))
-                .forEachOrdered(e -> sortMap.put(e.getKey(), e.getValue()));
-        int num = sortMap.keySet().iterator().next();
-        log.info("hot num: {}", num);
-        // TODO 尝试一个可以放7的位置，然后继续
+        grid.boxes.forEach(t -> counter.addAndGet(numberGroupExcludeOthers(t)));
+        if (counter.get() > 0) {
+            return true;
+        }
+        grid.rowQueues
+                .forEach(t -> counter.addAndGet(numberGroupExcludeOthers(t)));
+        if (counter.get() > 0) {
+            return true;
+        }
+        grid.columnQueues
+                .forEach(t -> counter.addAndGet(numberGroupExcludeOthers(t)));
+        return counter.get() > 0;
+    }
 
+    /**
+     * 候选数组排除其他格子的候选数
+     */
+    static int numberGroupExcludeOthers(Region region) {
+        // 从候选数中抽取两个数据一样的
+        // grid.rowQueues.forEach(t -> t.units.stream().filter(predicate));
+        // grid.units.stream().collect(Collectors.groupingBy(Unit::getHints,
+        // Collectors.counting()));
+        // log.debug("numberGroupExcludeOthers: {}", region.name);
+        // 获取候选数是2个或者3个的
+        Map<Set<Integer>, List<Unit>> unitsGroupByHints = region.units.stream()
+                .filter(t -> t.hints.size() == 2 || t.hints.size() == 3)
+                .collect(Collectors.groupingBy(Unit::getHints));
+        // log.debug("unitsGroupByHints: \n{}",
+        // StringUtils.join(unitsGroupByHints.entrySet(), "\n"));
+
+        AtomicInteger counter = new AtomicInteger(0);
+
+        for (Entry<Set<Integer>, List<Unit>> entry : unitsGroupByHints
+                .entrySet()) {
+
+            // 如果对应的格子数和候选数的个数一样，说明 这些格子把这些数都占住了，清除其关联的其他格子的这些候选数
+            if (entry.getKey().size() == entry.getValue().size()) {
+                log.info("the units {} have same hints {} in {}!",
+                        entry.getValue().stream().map(Unit::getName)
+                                .collect(Collectors.toList()),
+                        entry.getKey(), region.name);
+                counter.incrementAndGet();
+                region.units.stream().filter(t -> !entry.getValue().contains(t))
+                        .collect(Collectors.toList()).forEach(t -> {
+                            entry.getKey().forEach(num -> {
+                                if (t.hints.contains(num)) {
+                                    log.info(
+                                            "remove hint {} from unit {} in {}",
+                                            num, t, region.name);
+                                    t.hints.remove(num);
+                                }
+                            });
+
+                        });
+            }
+        }
+        return counter.get();
     }
 
     void print() {
-        grid.units.forEach(t -> this.matrix[t.row][t.column] = t.num);
+        grid.units.forEach(t -> matrix[t.row][t.column] = t.num);
         for (int i = 0; i < 9; i++) {
             System.out.println(Arrays.toString(matrix[i]));
         }
@@ -157,9 +289,8 @@ public class BenSudokuCrack {
      * @param matrix
      * @return
      */
-    Grid parseGrid(int[][] matrix) {
+    void parseGrid(int[][] matrix) {
 
-        this.matrix = matrix;
         grid = new Grid();
 
         parseUnits();
@@ -171,7 +302,6 @@ public class BenSudokuCrack {
         parseRows();
         parseLines();
 
-        return grid;
     }
 
     void parseUnits() {
@@ -216,9 +346,7 @@ public class BenSudokuCrack {
                 // box.row = row;
                 // box.column = column;
                 // box.pos = "" + row + column;
-                box.name = (row * 3) + (column + 1) + "";
-                // box.missingNums = new HashSet<>(defaultHints);
-                grid.boxes.add(box);
+                box.name = "B" + ((row * 3) + (column + 1)) + "";
 
                 // 得到属于这个宫的格子
                 box.units = grid.units.stream()
@@ -258,7 +386,7 @@ public class BenSudokuCrack {
         for (int column = 0; column < 9; column++) {
             Queue columnQueue = new Queue();
             columnQueue.pos = column;
-            columnQueue.name = getLineName(column);
+            columnQueue.name = getColumnName(column);
             final int columnFinal = column;
             columnQueue.units = grid.units.stream()
                     .filter(t -> t.column == columnFinal)
@@ -318,7 +446,7 @@ public class BenSudokuCrack {
         return nums;
     }
 
-    static void hiddenSingleInRegin(Region region, String regin) {
+    static void singleInRegin(Region region, String regin) {
 
         for (int i = 1; i <= 9; i++) {
             int iFinal = i;
@@ -326,9 +454,8 @@ public class BenSudokuCrack {
                     .filter(u -> u.hints.contains(iFinal))
                     .collect(Collectors.toList());
             if (iUnits.size() == 1) {
-                iUnits.get(0).fillNum(i,
-                        "hiddenSingleInRegin-" + (regin != null ? regin
-                                : region.getClass().getSimpleName()));
+                iUnits.get(0).fillNum(i, "single-in-" + (regin != null ? regin
+                        : region.getClass().getSimpleName()));
             }
         }
 
@@ -339,9 +466,9 @@ public class BenSudokuCrack {
      */
     void basicExclude() {
 
-        grid.boxes.forEach(t -> hiddenSingleInRegin(t, null));
-        grid.rowQueues.forEach(t -> hiddenSingleInRegin(t, "row"));
-        grid.columnQueues.forEach(t -> hiddenSingleInRegin(t, "column"));
+        grid.boxes.forEach(t -> singleInRegin(t, "Box"));
+        grid.rowQueues.forEach(t -> singleInRegin(t, "Row"));
+        grid.columnQueues.forEach(t -> singleInRegin(t, "Column"));
 
         // 格子唯一
         new ArrayList<>(grid.blankUnits).forEach(t -> {
@@ -381,15 +508,15 @@ public class BenSudokuCrack {
     }
 
     String getName(int row, int column) {
-        return getRowName(row) + getLineName(column);
+        return getRowName(row) + getColumnName(column);
     }
 
     String getRowName(int row) {
-        return ((char) (65 + row)) + "";
+        return "R" + (row + 1);
     }
 
-    String getLineName(int column) {
-        return column + 1 + "";
+    String getColumnName(int column) {
+        return "C" + (column + 1);
     }
 
     // if (grid.num == 0) {
@@ -420,7 +547,7 @@ public class BenSudokuCrack {
     /**
      *  遍历数字，将每个数字在每个宫可能出现的位置给列出来，如果确定在宫内只出现一次，则说明摒除得到结果
      */
-    void crackTheHiddenOne() {
+    void hiddenOne() {
         for (int num = 1; num <= 9; num++) {
             Set<Integer> rowSets = new HashSet<>();
             Set<Integer> columnSets = new HashSet<>();

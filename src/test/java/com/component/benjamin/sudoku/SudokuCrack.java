@@ -53,6 +53,7 @@ public class SudokuCrack {
 
         };
 
+        long cost = System.currentTimeMillis();
         if (isOkSudo(hint, sudo)) {
         } else {
             System.err.println("This is not illegal ");
@@ -94,7 +95,7 @@ public class SudokuCrack {
             crack(hint, sudo);
         }
 
-        System.out.println("解析完成：");
+        System.out.println("解析完成：" + (System.currentTimeMillis() - cost));
         for (int i = 0; i < 9; i++) {
             System.out.println(Arrays.toString(sudo[i]));
         }
@@ -182,8 +183,7 @@ public class SudokuCrack {
      * @param hint
      * @param sudo
      */
-    private static void eliminateHintdateNumbers(int[][][] hint,
-            int[][] sudo) {
+    private static void eliminateHintdateNumbers(int[][][] hint, int[][] sudo) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 int num = sudo[i][j];
@@ -202,8 +202,7 @@ public class SudokuCrack {
                     int boxColumn = j / 3;
                     for (int m = 0; m < 3; m++) {
                         for (int n = 0; n < 3; n++) {
-                            int[] p = hint[boxRow * 3 + m][boxColumn * 3
-                                    + n];
+                            int[] p = hint[boxRow * 3 + m][boxColumn * 3 + n];
                             p[num - 1] = 0;
                         }
                     }
@@ -220,8 +219,8 @@ public class SudokuCrack {
      * @param column
      * @param v
      */
-    private static void modifySudoAndHint(int[][][] hint, int[][] sudo,
-            int row, int column, int v) {
+    private static void modifySudoAndHint(int[][][] hint, int[][] sudo, int row,
+            int column, int v) {
         // 修改数独的值
         sudo[row][column] = v;
 
@@ -372,8 +371,7 @@ public class SudokuCrack {
      * 获取隐形数字中宫中两个相等的数字
      * @return
      */
-    private static List<HintInfo> getEqualHint(int[][][] hint,
-            int[][] sudo) {
+    private static List<HintInfo> getEqualHint(int[][][] hint, int[][] sudo) {
         // 找到两个相等数字
         // 遍历宫
         List<HintInfo> maps = new ArrayList<>();
